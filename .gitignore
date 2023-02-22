@@ -1,0 +1,6 @@
+
+# We ignore some files!
+.env
+node_modules
+database
+old-commands
