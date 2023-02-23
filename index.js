@@ -1,12 +1,15 @@
 require('dotenv').config();
-const { Client, Events, GatewayIntentBits, IntentsBitField, Collection, Partials, ContextMenuCommandBuilder, ApplicationCommandType } = require('discord.js');
+const { Client, Events, GatewayIntentBits, IntentsBitField, Collection, Partials, ContextMenuCommandBuilder, ApplicationCommandType, ActivityType, REST, Routes } = require('discord.js');
 const config = require('./config');
 const fs = require('fs');
 const database = require('./database');
 const filter = require('./util/scan');
+const mdn = require('./util/mdn');
+// const Player = require('./util/music');
 
 console.log('Working with', Object.keys(database).join(', '));
 console.log(filter.clean('The filter is working.'));
+
 
 const client = new Client({
     intents: new IntentsBitField(3276799),
@@ -34,8 +37,34 @@ const commands = fs.readdirSync(`${__dirname}/commands`)
 // creating the events
 const events = fs.readdirSync(`${__dirname}/events`).map((i) => require(`./events/${i}`));
 
+const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
+
+// and deploy your commands!
+(async () => {
+	try {
+		console.log(`Started refreshing ${commands.length} application (/) commands.`);
+
+		// The put method is used to fully refresh all commands in the guild with the current set
+		const data = await rest.put(
+			Routes.applicationCommands(client.id),
+			{ body: commands },
+		);
+
+		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+	} catch (error) {
+		// And of course, make sure you catch and log any errors!
+		console.error(error);
+	}
+})();
+
 client.once(Events.ClientReady, bot => {
     console.log(`Ready! Logged in as ${bot.user.tag}`);
+    client.user.setActivity({ 
+        type: ActivityType.Watching,
+        name: 'you'
+     });
+
+    // Player.setClient(client);
 
     // for slash commands
     bot.on(Events.InteractionCreate, async (interaction) => {
@@ -80,9 +109,10 @@ client.once(Events.ClientReady, bot => {
         bot.on(i.event, i.callback.bind(null, client));
     });
 
+    /*
     client.guilds.cache.forEach((guild) => {
         guild.commands.set(commands);
-    });
+    });*/
 });
 
 client.login(process.env.BOT_TOKEN);
