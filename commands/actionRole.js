@@ -4,9 +4,10 @@ const { ContextMenuCommandBuilder, ApplicationCommandType, PermissionFlagsBits, 
 
 module.exports = {
     command: new SlashCommandBuilder()
-        .setName('create_reaction_role')
-        .setDescription('Create a reaction role')
+        .setName('add_auto_role')
+        .setDescription('When a user react with an emoji, he will have a new role!')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
+        .setDMPermission(false)
         .addStringOption(option =>
             option
                 .setName('message')

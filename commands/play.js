@@ -6,6 +6,7 @@ module.exports = {
     command: new SlashCommandBuilder()
         .setName('play')
         .setDescription('Add a music to the queue')
+        .setDMPermission(false)
         .addStringOption(option =>
             option
                 .setName('query')

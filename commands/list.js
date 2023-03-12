@@ -5,7 +5,7 @@ const { getChoices, getListEmbed, getListReply } = require('../util/mdn');
 module.exports = {
     command: new SlashCommandBuilder()
         .setName('list')
-        .setDescription('List all the features in a category')
+        .setDescription('List all the features in a category.')
         .addSubcommand(option =>
             option
                 .setName('css')

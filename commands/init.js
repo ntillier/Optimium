@@ -6,6 +6,7 @@ module.exports = {
         .setName('init')
         .setDescription('Init the guild and databases')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .setDMPermission(false)
     ,
     execute(client, interaction) {
         const modal = new ModalBuilder()

@@ -87,7 +87,10 @@ Settings.get(config.settings.keys.spotifyToken)
 setInterval(() => {
     getToken(process.env.SPOTIFY_ID, process.env.SPOTIFY_SECRET)
         .then((t) => obj.token = t);
-}, 4560000)
+}, 4560000);
+
+getToken(process.env.SPOTIFY_ID, process.env.SPOTIFY_SECRET)
+    .then((t) => obj.token = t);
 
 exports.search = function (query, type) {
     return new Promise((resolve, reject) => {

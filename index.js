@@ -39,30 +39,12 @@ const events = fs.readdirSync(`${__dirname}/events`).map((i) => require(`./event
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 
-// and deploy your commands!
-(async () => {
-	try {
-		console.log(`Started refreshing ${commands.length} application (/) commands.`);
-
-		// The put method is used to fully refresh all commands in the guild with the current set
-		const data = await rest.put(
-			Routes.applicationCommands(client.id),
-			{ body: commands },
-		);
-
-		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
-	} catch (error) {
-		// And of course, make sure you catch and log any errors!
-		console.error(error);
-	}
-})();
-
 client.once(Events.ClientReady, bot => {
     console.log(`Ready! Logged in as ${bot.user.tag}`);
-    client.user.setActivity({ 
+    client.user.setActivity({
         type: ActivityType.Watching,
         name: 'you'
-     });
+    });
 
     // Player.setClient(client);
 
@@ -96,23 +78,34 @@ client.once(Events.ClientReady, bot => {
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }
     });
-
-    // for context menus
-    /*client.on(Events.InteractionCreate, interaction => {
-        if (!interaction.isUserContextMenuCommand()) return;
-
-        const { username } = interaction.targetUser;
-        console.log(username);
-    });*/
-
     events.forEach((i) => {
         bot.on(i.event, i.callback.bind(null, client));
     });
 
-    /*
+    
+
     client.guilds.cache.forEach((guild) => {
         guild.commands.set(commands);
-    });*/
+    });
+
+    // and deploy your commands!
+    /*
+    (async () => {
+        try {
+            console.log(`Started refreshing ${commands.length} application (/) commands.`);
+
+            // The put method is used to fully refresh all commands in the guild with the current set
+            const data = await rest.put(
+                Routes.applicationCommands(client.user.id),
+                { body: [] || commands },
+            );
+
+            console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+        } catch (error) {
+            // And of course, make sure you catch and log any errors!
+            console.error(error);
+        }
+    })();*/
 });
 
 client.login(process.env.BOT_TOKEN);

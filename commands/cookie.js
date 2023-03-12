@@ -6,6 +6,7 @@ module.exports = {
     command: new SlashCommandBuilder()
         .setName('cookie')
         .setDescription('Send a cookie to a friend')
+        .setDMPermission(false)
         .addUserOption(option =>
             option
                 .setName('user')

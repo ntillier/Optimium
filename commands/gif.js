@@ -17,7 +17,6 @@ module.exports = {
             : `https://g.tenor.com/v1/trending?key=${process.env.TENOR_TOKEN}&contentfilter=medium&media_filter=basic&limit=50`;
 
         await interaction.deferReply();
-        await interaction.channel.sendTyping();
         
         fetch(url)
             .then(res => res.json())

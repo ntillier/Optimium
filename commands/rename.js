@@ -3,6 +3,7 @@ const wait = require('node:timers/promises').setTimeout;
 
 module.exports = {
     command: new SlashCommandBuilder()
+        .setDMPermission(false)
         .setName('rename')
         .setDescription('Rename myself!')
         .addStringOption(option =>
