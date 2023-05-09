@@ -5,6 +5,10 @@ module.exports = {
             spotifyToken: 'spotity_token'
         }
     },
+    dms: {
+        guild: '1075514214984196231',
+        channel: '1105155371393359872'
+    },
     logs: {
         guild: '1075514214984196231',
         channel: '1077701418422636657'

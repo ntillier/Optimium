@@ -5,10 +5,13 @@ const fs = require('fs');
 const database = require('./database');
 const filter = require('./util/scan');
 const mdn = require('./util/mdn');
+const transfers = require('./util/transfers');
 // const Player = require('./util/music');
 
 console.log('Working with', Object.keys(database).join(', '));
 console.log(filter.clean('The filter is working.'));
+
+// database.Dms.clear();
 
 
 const client = new Client({
@@ -37,16 +40,102 @@ const commands = fs.readdirSync(`${__dirname}/commands`)
 // creating the events
 const events = fs.readdirSync(`${__dirname}/events`).map((i) => require(`./events/${i}`));
 
-const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
+// const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 
-client.once(Events.ClientReady, bot => {
+function copyMessage(message) {
+    const files = [];
+
+    for (let file of message.attachments) {
+        files.push(file[1]);
+    }
+
+    return {
+        content: message.content,
+        components: message.components,
+        files: files,
+        embeds: message.embeds
+    };
+}
+
+client.once(Events.ClientReady, (bot) => {
     console.log(`Ready! Logged in as ${bot.user.tag}`);
+
     client.user.setActivity({
         type: ActivityType.Watching,
         name: 'you'
     });
 
-    // Player.setClient(client);
+    // for messages
+    bot.on(Events.MessageCreate, async (message) => {
+
+
+        // if the author is a bot, or is a reply to an interaction we don't transfer the message
+        if (message.author.bot || message.interaction) {
+            return;
+        }
+
+        try {
+            // if it's a dm
+            if (message.channel.isDMBased()) {
+                transfers.createJob({
+                    type: 'from-dms',
+                    user: {
+                        username: message.author.username,
+                        discriminator: message.author.discriminator,
+                        id: message.author.id
+                    },
+                    message: copyMessage(message)
+                }, client);
+            }
+
+            // if it's in a response thread, we send the message to the user
+            if (message.channel.isThread() && message.channel.ownerId === bot.user.id) {
+                const userId = message.channel.name.split(' ').at(-1);
+
+                if (userId === bot.user.id) {
+                    return;
+                }
+
+                if (await database.Dms.get(userId)) {
+                    transfers.createJob({
+                        type: 'to-dms',
+                        message: copyMessage(message),
+                        user: {
+                            id: message.author.id,
+                            username: message.author.username,
+                            discriminator: message.author.discriminator
+                        }
+                    }, client);
+                }
+
+            }
+
+        } catch (err) {
+            console.log('Unable to transfer message.\nReason:', err);
+        }
+    });
+
+    bot.on(Events.ThreadUpdate, async (oldThread, newThread) => {
+        const user = oldThread.name.split(' ').at(-1);
+
+        if (oldThread?.ownerId !== bot.user.id || !user) {
+            return;
+        }
+
+        if (newThread.locked && !oldThread.locked) {
+            await database.Dms.set(user, {
+                threadId: null
+            });
+        }
+
+        if (!newThread.locked && oldThread.locked) {
+            await database.Dms.set(user, {
+                threadId: newThread.id
+            });
+        }
+    });
+
+
 
     // for slash commands
     bot.on(Events.InteractionCreate, async (interaction) => {
@@ -82,7 +171,7 @@ client.once(Events.ClientReady, bot => {
         bot.on(i.event, i.callback.bind(null, client));
     });
 
-    
+
 
     client.guilds.cache.forEach((guild) => {
         guild.commands.set(commands);

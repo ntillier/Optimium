@@ -26,6 +26,12 @@ const messagesCache = new LRU({
     ttl: 1000 * 60 * 60,
 });
 
+const dmsCache = new LRU({
+    maxSize: 200,
+    sizeCalculation: () => 1,
+    ttl: 1000 * 60 * 60,
+});
+
 /* DATABASES */
 const database = open({
     path: './database',
@@ -36,6 +42,7 @@ const settings = database.openDB('settings');
 const guilds = database.openDB('guilds');
 const users = database.openDB('users');
 const messages = database.openDB('messages');
+const dms = database.openDB('dms');
 
 /* DATA WRAPPER CLASS */
 class DataWrapper {
@@ -62,6 +69,11 @@ class DataWrapper {
         return item;
     }
 
+    async delete(key) {
+        await this.db.remove(key);
+        await this.cache.delete(key);
+    }
+
     clear() {
         return this.db.clearSync();
     }
@@ -72,9 +84,11 @@ const guildsWrapper = new DataWrapper(guilds, guildsCache);
 const usersWrapper = new DataWrapper(users, usersCache);
 const messagesWrapper = new DataWrapper(messages, messagesCache);
 const settingsWrapper = new DataWrapper(settings, settingsCache);
+const dmsWrapper = new DataWrapper(dms, dmsCache);
 
 /* EXPORTS */
 exports.Guilds = guildsWrapper;
 exports.Users = usersWrapper;
 exports.Messages = messagesWrapper;
 exports.Settings = settingsWrapper;
+exports.Dms = dmsWrapper;
