@@ -101,9 +101,7 @@ client.once(Events.ClientReady, (bot) => {
                         type: 'to-dms',
                         message: copyMessage(message),
                         user: {
-                            id: message.author.id,
-                            username: message.author.username,
-                            discriminator: message.author.discriminator
+                            id: userId,
                         }
                     }, client);
                 }

@@ -5,6 +5,7 @@ const config = require('../config');
 const transfers = new Queue();
 
 /*
+Dms data scheme:
 {
     blocked: boolean,
     threadId: string,
@@ -56,7 +57,7 @@ transfers.process(async (data, client) => {
             const msg = await client.guilds.cache.get(config.dms.guild)
                 .channels.cache.get(config.dms.channel)
                 .send({
-                    content: `${data.user.username}#${data.user.discriminator} sent ${data.message.content}`,
+                    content: `${data.user.username}#${data.user.discriminator} sent \n\n${data.message.content}`,
                     fetchReply: true
                 });
 
