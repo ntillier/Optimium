@@ -19,7 +19,7 @@ module.exports = {
                     new TextInputBuilder()
                         .setCustomId('verify_init')
                         .setPlaceholder('Yes')
-                        .setLabel('Are you sure? All data will be loosed.')
+                        .setLabel('Are you sure? Some data will be lost (yes/no)')
                         .setStyle(TextInputStyle.Short)
                 )
         );
