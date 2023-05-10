@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const wd = require('word-definition');
-// wd.getDef(word, language, options, callback);
 
 function getEmbed(result) {
     return new EmbedBuilder()

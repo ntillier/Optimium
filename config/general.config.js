@@ -13,6 +13,11 @@ module.exports = {
         guild: '1075514214984196231',
         channel: '1077701418422636657'
     },
+    filter: {
+        enabled: true,
+        message: '<@{{ message.author.id }}> sent a message with some profane language\n{{ cleaned }}',
+        placeholder: '\\*'
+    },
     sentences: {
         hello: [
             'Hello world!',

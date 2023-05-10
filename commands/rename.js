@@ -5,18 +5,28 @@ module.exports = {
     command: new SlashCommandBuilder()
         .setDMPermission(false)
         .setName('rename')
-        .setDescription('Rename myself!')
+        .setDescription('Rename a user')
+        .addUserOption(option =>
+            option
+                .setName('user')
+                .setDescription('The user')
+                .setRequired(true)
+        )
         .addStringOption(option =>
             option
                 .setName('name')
-                .setDescription('The new name!')
+                .setDescription('The new nickname')
                 .setRequired(true)
                 .setMaxLength(40)
                 .setMinLength(2)
         )
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
     async execute (client, interaction) {
-        await interaction.guild.members.me.setNickname(interaction.options.getString('name'));
+        const userId = interaction.options.getUser('user').id;
+        const name = interaction.options.getString('name');
+
+        await (await interaction.guild.members.fetch(userId)).setNickname(name);
+        
         await interaction.reply({ content: 'Done!', ephemeral: true });
         await wait(2000);
         interaction.deleteReply();

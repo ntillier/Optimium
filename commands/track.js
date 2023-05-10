@@ -3,7 +3,7 @@ const { search } = require('../util/spotify');
 
 module.exports = {
     command: new SlashCommandBuilder()
-        .setName('track')
+        .setName('play_track')
         .setDescription('Search for a track on Spotify')
         .addStringOption(option =>
             option

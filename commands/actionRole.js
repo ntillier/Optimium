@@ -1,11 +1,11 @@
-const { RoleSelectMenuBuilder, SlashCommandBuilder } = require("@discordjs/builders");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { Messages } = require("../database");
-const { ContextMenuCommandBuilder, ApplicationCommandType, PermissionFlagsBits, ActionRowBuilder, TextInputBuilder, StringSelectMenuBuilder, ModalBuilder, TextInputStyle } = require("discord.js");
+const { PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
     command: new SlashCommandBuilder()
         .setName('add_auto_role')
-        .setDescription('When a user react with an emoji, he will have a new role!')
+        .setDescription('When a user reacts with an emoji, he will have a new role!')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
         .setDMPermission(false)
         .addStringOption(option =>

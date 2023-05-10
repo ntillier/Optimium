@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 module.exports = {
     command: new SlashCommandBuilder()
         .setDMPermission(false)
-        .setName('lockthread')
+        .setName('lock_thread')
         .setDescription('Lock, close and archive this thread')
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
     async execute (client, interaction) {

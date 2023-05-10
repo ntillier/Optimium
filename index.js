@@ -1,16 +1,12 @@
 require('dotenv').config();
-const { Client, Events, GatewayIntentBits, IntentsBitField, Collection, Partials, ContextMenuCommandBuilder, ApplicationCommandType, ActivityType, REST, Routes } = require('discord.js');
-const config = require('./config');
+const { Client, Events, IntentsBitField, Collection, Partials,  ActivityType, REST, Routes } = require('discord.js');
 const fs = require('fs');
 const database = require('./database');
-const filter = require('./util/scan');
-const mdn = require('./util/mdn');
+const filter = require('./util/filter');
 const transfers = require('./util/transfers');
 
 console.log('Working with', Object.keys(database).join(', '));
 console.log(filter.clean('The filter is working.'));
-
-// database.Dms.clear();
 
 
 const client = new Client({

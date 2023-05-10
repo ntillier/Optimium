@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 module.exports = {
     command: new SlashCommandBuilder()
         .setDMPermission(false)
-        .setName('unlockthread')
+        .setName('unlock_thread')
         .setDescription('Unlock, unclose and unarchive this thread')
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
     async execute (client, interaction) {

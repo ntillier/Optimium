@@ -28,10 +28,6 @@ module.exports = {
             client.channels.cache.get(logs.channel).send(content);
         }
 
-        function unFormat(str) {
-            return str.replace(/`/g, '').replace(/([*_~])/g, (m) => '\\' + m);
-        }
-
         for (let change of changes) {
             switch (change.key) {
                 case 'nickname':

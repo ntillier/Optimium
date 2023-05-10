@@ -43,7 +43,7 @@ function unFormat(str) {
 
 module.exports = {
     command: new SlashCommandBuilder()
-        .setName('support')
+        .setName('check_support')
         .setDescription('Check the support of a programming feature')
         .addSubcommand(option =>
             option

@@ -74,5 +74,5 @@ module.exports = {
             notify: true,
             message: '<@{{ newUser.id }}>\'s avatar changed.'
         }
-    }
+    },
 }
