@@ -28,6 +28,7 @@
     "parse-path": "^7.0.0",
     "reverso-api": "^2.22.3",
     "tldts": "^5.7.109",
+    "with-simple-logger": "^1.0.2",
     "word-definition": "^2.1.6",
     "ytdl-core": "^4.11.2"
   }

@@ -1,5 +1,11 @@
 const { Events, EmbedBuilder } = require("discord.js");
-const config = require("../config");
+
+const { logs, events } = require('../config');
+const createLogger = require('with-simple-logger');
+
+const loggers = {
+    avatar: createLogger(events.userUpdate.avatar.message)
+};
 
 module.exports = {
     event: Events.UserUpdate,
@@ -17,28 +23,30 @@ module.exports = {
             }
         }
 
-        function send (content) {
-            client.channels.cache.get(config.logs.channel).send(content);
+        function send(content) {
+            client.channels.cache.get(logs.channel).send(content);
         }
 
-        function unFormat (str) {
+        function unFormat(str) {
             return str.replace(/`/g, '').replace(/([*_~])/g, (m) => '\\' + m);
         }
 
         for (let i of changes) {
             switch (i.key) {
                 case 'avatar':
-                    send({
-                        content: `<@${newUser.id}>'s avatar changed.`,
-                        embeds: [
-                            new EmbedBuilder()
-                                .setDescription('from')
-                                .setThumbnail(oldUser.displayAvatarURL()),
-                            new EmbedBuilder()
-                                .setDescription('to')
-                                .setThumbnail(newUser.displayAvatarURL())
-                        ]
-                    });
+                    if (events.userUpdate.avatar.notify) {
+                        send({
+                            content: loggers.avatar({ newUser, oldUser }),
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setDescription('from')
+                                    .setThumbnail(oldUser.displayAvatarURL()),
+                                new EmbedBuilder()
+                                    .setDescription('to')
+                                    .setThumbnail(newUser.displayAvatarURL())
+                            ]
+                        });
+                    }
 
             }
         }

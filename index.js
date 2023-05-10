@@ -6,7 +6,6 @@ const database = require('./database');
 const filter = require('./util/scan');
 const mdn = require('./util/mdn');
 const transfers = require('./util/transfers');
-// const Player = require('./util/music');
 
 console.log('Working with', Object.keys(database).join(', '));
 console.log(filter.clean('The filter is working.'));

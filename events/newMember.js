@@ -1,11 +1,19 @@
 const { Events } = require("discord.js");
-const config = require("../config");
 const { Users } = require("../database");
+
+const { logs, events } = require('../config');
+const createLogger = require('with-simple-logger');
+
+const logger = createLogger(events.memberJoin.message);
 
 module.exports = {
     event: Events.GuildMemberAdd,
     callback: async (client, member) => {
-        client.channels.cache.get(config.logs.channel).send(`Welcome <@${member.id}>!\nIt's great to see you here :wink: Btw, you are the ${member.guild.memberCount} person to land here :fire:`);
+
+        if (events.memberJoin.notify) {
+            client.channels.cache.get(logs.channel).send(logger({ member }));
+        }
+
         Users.get(member.id)
             .then((m) => {
                 if (!m) {

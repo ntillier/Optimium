@@ -1,9 +1,15 @@
 const { Events } = require("discord.js");
-const config = require("../config");
+
+const { logs, events } = require('../config');
+const createLogger = require('with-simple-logger');
+
+const logger = createLogger(events.guildBanRemove.message);
 
 module.exports = {
     event: Events.GuildBanRemove,
     callback: async (client, user) => {
-        client.channels.cache.get(config.logs.channel).send(`<@${user.user.id}> is not banned anymore.`)
+        if (events.guildBanRemove.notify) {
+            client.channels.cache.get(logs.channel).send(logger({ user: user.user }));
+        }
     }
 };

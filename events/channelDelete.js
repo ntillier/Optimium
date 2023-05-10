@@ -1,9 +1,15 @@
 const { Events } = require("discord.js");
-const config = require("../config");
+
+const { logs, events } = require('../config');
+const createLogger = require('with-simple-logger');
+
+const logger = createLogger(events.channelDelete.message);
 
 module.exports = {
     event: Events.ChannelDelete,
     callback: async (client, channel) => {
-        client.guilds.cache.get(config.logs.guild).channels.cache.get(config.logs.channel).send(`The channel <#${channel.id}> has been deleted.`)
+        if (events.channelDelete.notify) {
+            client.guilds.cache.get(logs.guild).channels.cache.get(logs.channel).send(logger({ channel }));
+        }
     }
 };

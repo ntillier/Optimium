@@ -1,9 +1,15 @@
 const { Events } = require("discord.js");
-const config = require("../config");
+
+const { logs, events } = require('../config');
+const createLogger = require('with-simple-logger');
+
+const logger = createLogger(events.roleUpdate.message);
 
 module.exports = {
     event: Events.GuildRoleUpdate,
     callback: async (client, role) => {
-        client.channels.cache.get(config.logs.channel).send(`The role <@&${role.id}> has been updated!`)
+        if (events.roleUpdate.notify) {
+            client.channels.cache.get(logs.channel).send(logger({ role }));
+        }
     }
 };

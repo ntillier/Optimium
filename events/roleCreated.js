@@ -1,9 +1,15 @@
 const { Events } = require("discord.js");
-const config = require("../config");
+
+const { logs, events } = require('../config');
+const createLogger = require('with-simple-logger');
+
+const logger = createLogger(events.roleCreate.message);
 
 module.exports = {
     event: Events.GuildRoleCreate,
     callback: async (client, role) => {
-        client.channels.cache.get(config.logs.channel).send(`The role <@&${role.id}> has been created!`)
+        if (events.roleCreate.notify) {
+            client.channels.cache.get(logs.channel).send(logger({ role }));
+        }
     }
 };

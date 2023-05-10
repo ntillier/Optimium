@@ -1,9 +1,15 @@
 const { Events } = require("discord.js");
-const config = require("../config");
+
+const { logs, events } = require('../config');
+const createLogger = require('with-simple-logger');
+
+const logger = createLogger(events.emojiCreate.message);
 
 module.exports = {
     event: Events.GuildEmojiCreate,
     callback: async (client, emoji) => {
-        client.channels.cache.get(config.logs.channel).send(`The emoji <:${emoji.name}:${emoji.id}> has been created!`)
+        if (events.emojiCreate.notify) {
+            client.channels.cache.get(logs.channel).send(logger({ emoji }));
+        }
     }
 };

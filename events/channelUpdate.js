@@ -1,9 +1,15 @@
 const { Events } = require("discord.js");
-const config = require("../config");
+
+const { logs, events } = require('../config');
+const createLogger = require('with-simple-logger');
+
+const logger = createLogger(events.channelUpdate.message);
 
 module.exports = {
     event: Events.ChannelUpdate,
     callback: async (client, channel) => {
-        client.guilds.cache.get(config.logs.guild).channels.cache.get(config.logs.channel).send(`The channel <#${channel.id}> has been updated.`)
+        if (events.channelUpdate.notify) {
+            client.guilds.cache.get(logs.guild).channels.cache.get(logs.channel).send(logger({ channel }));
+        }
     }
 };

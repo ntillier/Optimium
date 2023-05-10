@@ -1,9 +1,15 @@
 const { Events } = require("discord.js");
-const config = require("../config");
+
+const { logs, events } = require('../config');
+const createLogger = require('with-simple-logger');
+
+const logger = createLogger(events.emojiDelete.message);
 
 module.exports = {
     event: Events.GuildEmojiDelete,
     callback: async (client, emoji) => {
-        client.channels.cache.get(config.logs.channel).send(`The emoji <:${emoji.name}:${emoji.id}> has been deleted!`)
+        if (events.emojiDelete.notify) {
+            client.channels.cache.get(logs.channel).send(logger({ emoji }))
+        }
     }
 };
